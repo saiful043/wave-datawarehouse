@@ -1,7 +1,7 @@
 from django.urls import path
 from rest_framework.routers import DefaultRouter
 #user
-from .views import me_view, change_password_view, UserViewSet, GroupViewSet
+from .views import me_view, change_password_view, UserViewSet, GroupViewSet, PermissionViewSet
 
 from apps.api.views import (
     LocationViewSet, 
@@ -20,11 +20,13 @@ from apps.beneficiaries.views import GenderChartDataView
 from apps.beneficiaries.views import EducationChartDataView
 from apps.beneficiaries.views import AgePyramidChartDataView
 from apps.beneficiaries.views import EthnicChartDataView
+from apps.earn_tasks.views import EarnTaskTemplateViewSet, EarnTaskSubmissionViewSet
 
 router = DefaultRouter()
 #user
 router.register(r'users', UserViewSet, basename='users')
 router.register(r'groups', GroupViewSet, basename='groups')
+router.register(r'permissions', PermissionViewSet, basename='permissions')
 
 
 router.register(r'locations', LocationViewSet, basename='location')
@@ -36,6 +38,10 @@ router.register(r'beneficiaries', BeneficiaryViewSet, basename='beneficiary')  #
 
 router.register(r'core/packages', PackageViewSet, basename='package')
 router.register(r'field-activities', FieldActivityViewSet, basename='field-activity')
+
+# Router integration
+router.register(r'earn-task-templates', EarnTaskTemplateViewSet, basename='earn-task-templates')
+router.register(r'earn-task-submissions', EarnTaskSubmissionViewSet, basename='earn-task-submissions')
 
 urlpatterns = [
     #user

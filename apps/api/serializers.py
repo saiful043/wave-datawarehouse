@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User, Group, Permission
 from .models import UserProfile
 from apps.core.models import Location, Gender
 
@@ -58,6 +58,25 @@ class UserProfileSerializer(serializers.ModelSerializer):
             'village', 'village_id'
         ]
 
+# 1. Permission Serializer
+class PermissionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Permission
+        fields = ['id', 'name', 'codename', 'content_type']
+        
+
+class GroupSerializer(serializers.ModelSerializer):
+    permissions_details = PermissionSerializer(source='permissions', many=True, read_only=True)
+    permissions = serializers.PrimaryKeyRelatedField(
+        queryset=Permission.objects.all(),
+        many=True,
+        required=False
+    )
+    class Meta:
+        model = Group
+        fields = ['id', 'name', 'permissions', 'permissions_details']
+
+
 # User Serializer
 class UserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
@@ -66,9 +85,17 @@ class UserSerializer(serializers.ModelSerializer):
     )
     profile = UserProfileSerializer(required=False)
 
+    # GET এ গ্রুপের ডিটেইলস এবং POST/PUT এ Group ID গ্রহণ করার জন্য
+    groups_details = GroupSerializer(source='groups', many=True, read_only=True)
+    groups = serializers.PrimaryKeyRelatedField(
+        queryset=Group.objects.all(),
+        many=True,
+        required=False
+    )
+
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'is_staff', 'is_superuser', 'groups', 'profile']
+        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'is_staff', 'is_superuser', 'groups', 'groups_details', 'profile']
 
     def create(self, validated_data):
         profile_data = validated_data.pop('profile', {})
@@ -106,12 +133,6 @@ class UserSerializer(serializers.ModelSerializer):
             instance.groups.set(groups)
 
         return instance
-
-
-class GroupSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Group
-        fields = ['id', 'name']
 
 
 class ChangePasswordSerializer(serializers.Serializer):

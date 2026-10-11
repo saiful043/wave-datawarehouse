@@ -3,8 +3,8 @@ from rest_framework import status, viewsets, permissions
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
-from django.contrib.auth.models import User, Group
-from .serializers import UserSerializer, GroupSerializer, ChangePasswordSerializer
+from django.contrib.auth.models import User, Group, Permission
+from .serializers import UserSerializer, GroupSerializer, PermissionSerializer,  ChangePasswordSerializer
 #user end
 
 from django_filters import rest_framework as filters
@@ -33,7 +33,7 @@ class UserViewSet(viewsets.ModelViewSet):
         'profile__upazila', 
         'profile__union', 
         'profile__village'
-    ).order_by('-id')
+    ).prefetch_related('groups').order_by('-id')
     serializer_class = UserSerializer
     permission_classes = [IsAdminUser]
 
@@ -83,13 +83,20 @@ def change_password_view(request):
     return Response({"message": "Password safollobhabe poribortito hoyeche."})
 
 # Superadmin Viewsets for Users & Groups
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all().order_by('-id')
-    serializer_class = UserSerializer
-    permission_classes = [IsAdminUser] # Superadmin / Staff shudhu access pabe
+# class UserViewSet(viewsets.ModelViewSet):
+#     queryset = User.objects.all().order_by('-id')
+#     serializer_class = UserSerializer
+#     permission_classes = [IsAdminUser] # Superadmin / Staff shudhu access pabe
+
+# Permission ViewSet (Read-Only)
+class PermissionViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Permission.objects.all().select_related('content_type').order_by('content_type__app_label', 'id')
+    serializer_class = PermissionSerializer
+    permission_classes = [IsAdminUser]
+
 
 class GroupViewSet(viewsets.ModelViewSet):
-    queryset = Group.objects.all()
+    queryset = Group.objects.all().prefetch_related('permissions')
     serializer_class = GroupSerializer
     permission_classes = [IsAdminUser]
 #user end

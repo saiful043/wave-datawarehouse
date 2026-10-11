@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'apps.analytics',
     'apps.programs',
     'apps.field_activities',
+    'apps.earn_tasks',
     'django_select2',
     'rest_framework',
     'rest_framework_simplejwt',
