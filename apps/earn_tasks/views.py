@@ -17,7 +17,8 @@ class EarnTaskTemplateViewSet(viewsets.ModelViewSet):
     serializer_class = EarnTaskTemplateSerializer
     permission_classes = [permissions.IsAuthenticated]
     parser_classes = (MultiPartParser, FormParser, JSONParser)
-    pagination_class = StandardResultsSetPagination
+    # pagination_class = StandardResultsSetPagination
+    pagination_class = None
     filterset_fields = ['segment']
     search_fields = ['task_name', 'output']
 
