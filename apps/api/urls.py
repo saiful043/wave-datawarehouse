@@ -20,7 +20,7 @@ from apps.beneficiaries.views import GenderChartDataView
 from apps.beneficiaries.views import EducationChartDataView
 from apps.beneficiaries.views import AgePyramidChartDataView
 from apps.beneficiaries.views import EthnicChartDataView
-from apps.earn_tasks.views import EarnTaskTemplateViewSet, EarnTaskSubmissionViewSet
+from apps.earn_tasks.views import EarnParentTaskViewSet, EarnTaskTemplateViewSet, EarnTaskSubmissionViewSet
 
 router = DefaultRouter()
 #user
@@ -40,6 +40,7 @@ router.register(r'core/packages', PackageViewSet, basename='package')
 router.register(r'field-activities', FieldActivityViewSet, basename='field-activity')
 
 # Router integration
+router.register(r'earn-parent-tasks', EarnParentTaskViewSet, basename='earn-parent-tasks')
 router.register(r'earn-task-templates', EarnTaskTemplateViewSet, basename='earn-task-templates')
 router.register(r'earn-task-submissions', EarnTaskSubmissionViewSet, basename='earn-task-submissions')
 

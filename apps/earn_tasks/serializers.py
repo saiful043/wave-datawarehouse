@@ -1,5 +1,10 @@
 from rest_framework import serializers
-from .models import EarnTaskTemplate, EarnTaskSubmission
+from .models import EarnParentTask, EarnTaskTemplate, EarnTaskSubmission
+
+class EarnParentTaskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EarnParentTask
+        fields = '__all__'
 
 class EarnTaskTemplateSerializer(serializers.ModelSerializer):
     class Meta:

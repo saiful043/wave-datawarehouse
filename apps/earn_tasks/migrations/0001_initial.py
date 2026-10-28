@@ -38,7 +38,7 @@ class Migration(migrations.Migration):
             name='EarnTaskSubmission',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('status', models.CharField(choices=[('Done', 'Done'), ('Due Soon', 'Due Soon'), ('Upcoming', 'Upcoming'), ('Ongoing', 'Ongoing'), ('Not Set', 'Not Set')], default='Not Set', max_length=20)),
+                ('status', models.CharField(choices=[('Completed', 'Completed'), ('Delayed', 'Delayed'), ('In Progress', 'In Progress')], default='Not Started', max_length=20)),
                 ('attachment', models.FileField(blank=True, null=True, upload_to='earn_task_submissions/')),
                 ('comments', models.TextField(blank=True, null=True)),
                 ('submitted_at', models.DateTimeField(auto_now=True)),
